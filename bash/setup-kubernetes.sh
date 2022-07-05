@@ -25,7 +25,7 @@ sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://pack
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 # Install kubectl, kubelet and kubeadm in specific versions
-sudo apt update && sudo apt install -y kubelet=1.24.2-00 kubeadm=1.24.2-00 kubectl=1.24.2-00
+sudo apt update && sudo apt install -y kubelet=1.23.5-00 kubeadm=1.23.5-00 kubectl=1.23.5-00
 
 # Hold packages to this version for now
 sudo apt-mark hold kubelet kubeadm kubectl
@@ -43,3 +43,10 @@ net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
 sudo sysctl --system
+
+# Make sure Docker is using systemd as cgroup driver
+sudo echo "{
+  \"exec-opts\": [\"native.cgroupdriver=systemd\"]
+}" > /etc/docker/daemon.json
+
+sudo systemctl restart docker
